@@ -11,7 +11,9 @@ interface AuthStore {
 
 export const useAuthStore = create<AuthStore>(set => ({
   isAuthenticated: false,
-  setAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
+  setAuthenticated: (value: boolean) => {
+    set({ isAuthenticated: value });
+  },
   login: provider => {
     const params = new URLSearchParams({
       client_id: config.auth[provider].clientId,
@@ -37,6 +39,7 @@ export const useAuthStore = create<AuthStore>(set => ({
   logout: async () => {
     try {
       await api.post('/auth/logout');
+      document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       set({ isAuthenticated: false });
     } catch (error) {
       console.error('Logout failed:', error);

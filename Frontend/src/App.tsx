@@ -11,9 +11,21 @@ export default function App() {
   const setAuthenticated = useAuthStore(state => state.setAuthenticated);
 
   useEffect(() => {
-    const jwt = document.cookie.includes('jwt=');
-    setAuthenticated(jwt);
-  }, []);
+    const checkAuth = () => {
+      const cookies = document.cookie.split(';');
+      const jwtCookie = cookies.find(cookie => cookie.trim().startsWith('jwt='));
+      const isAuthenticated = !!jwtCookie;
+      setAuthenticated(isAuthenticated);
+    };
+
+    checkAuth();
+
+    window.addEventListener('storage', checkAuth);
+
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
+  }, [setAuthenticated]);
 
   return (
     <QueryClientProvider client={queryClient}>

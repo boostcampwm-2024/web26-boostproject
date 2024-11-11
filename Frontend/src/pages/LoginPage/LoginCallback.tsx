@@ -3,12 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function LoginCallback() {
-  const navigate = useNavigate();
   const setAuthenticated = useAuthStore(state => state.setAuthenticated);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setAuthenticated(true);
-    navigate('/');
+    const handleCallback = async () => {
+      try {
+        setAuthenticated(true);
+        navigate('/');
+      } catch (error) {
+        console.error('Login callback failed:', error);
+        navigate('/login');
+      }
+    };
+
+    handleCallback();
   }, [navigate, setAuthenticated]);
 
   return (
