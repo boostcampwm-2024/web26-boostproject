@@ -1,3 +1,4 @@
+// src/store/useAuthStore.ts
 import { create } from 'zustand';
 import { api } from '@/apis/axios';
 import { config } from '@/config/env';
@@ -12,8 +13,11 @@ interface AuthStore {
 
 const getJwtFromCookie = () => {
   try {
+    console.log('Checking cookies:', document.cookie);
     const cookies = document.cookie.split(';').map(cookie => cookie.trim());
-    return cookies.some(cookie => cookie.startsWith('jwt='));
+    const hasJwt = cookies.some(cookie => cookie.startsWith('jwt='));
+    console.log('JWT found in cookies:', hasJwt);
+    return hasJwt;
   } catch (error) {
     console.error('Error checking JWT cookie:', error);
     return false;
@@ -21,20 +25,28 @@ const getJwtFromCookie = () => {
 };
 
 export const useAuthStore = create<AuthStore>(set => {
+  console.log('Creating auth store');
   const initialAuth = getJwtFromCookie();
+  console.log('Initial auth state:', initialAuth);
 
   return {
     isAuthenticated: initialAuth,
 
-    setAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
+    setAuthenticated: (value: boolean) => {
+      console.log('Setting authenticated:', value);
+      set({ isAuthenticated: value });
+    },
 
     checkAuthStatus: () => {
+      console.log('Checking auth status');
       const hasJwt = getJwtFromCookie();
+      console.log('Auth status result:', hasJwt);
       set({ isAuthenticated: hasJwt });
       return hasJwt;
     },
 
     login: provider => {
+      console.log('Login initiated for provider:', provider);
       const params = new URLSearchParams({
         client_id: config.auth[provider].clientId,
         redirect_uri: config.auth[provider].redirectUri,
@@ -58,10 +70,12 @@ export const useAuthStore = create<AuthStore>(set => {
     },
 
     logout: async () => {
+      console.log('Logout initiated');
       try {
         await api.post('/auth/logout');
         document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         set({ isAuthenticated: false });
+        console.log('Logout successful');
       } catch (error) {
         console.error('Logout failed:', error);
         throw error;
