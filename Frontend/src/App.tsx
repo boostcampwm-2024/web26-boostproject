@@ -11,7 +11,13 @@ export default function App() {
   const { checkAuthStatus } = useAuthStore();
 
   useEffect(() => {
-    checkAuthStatus();
+    const initialCheck = () => {
+      const isAuth = checkAuthStatus();
+      console.log('Auth check result:', isAuth);
+    };
+
+    initialCheck();
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         checkAuthStatus();
