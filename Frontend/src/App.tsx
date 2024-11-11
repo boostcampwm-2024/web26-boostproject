@@ -8,12 +8,22 @@ import { queryClient } from '@/config/queryClient';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function App() {
-  const setAuthenticated = useAuthStore(state => state.setAuthenticated);
+  const { checkAuthStatus } = useAuthStore();
 
   useEffect(() => {
-    const jwt = document.cookie.includes('jwt=');
-    setAuthenticated(jwt);
-  }, []);
+    checkAuthStatus();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkAuthStatus();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [checkAuthStatus]);
 
   return (
     <QueryClientProvider client={queryClient}>
