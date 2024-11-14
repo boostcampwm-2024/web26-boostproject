@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { config } from '@/config/env';
 import { useAuthStore } from '@/store/useAuthStore';
-import { RefreshTokenResponse } from '@/types/auth';
+// import { RefreshTokenResponse } from '@/types/auth';
 
 export const api = axios.create({
   baseURL: config.apiBaseUrl,

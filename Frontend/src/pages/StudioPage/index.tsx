@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useLayoutStore from '@store/useLayoutStore';
-import { useAuth } from '@hooks/useAuth';
+// import { useAuth } from '@hooks/useAuth';
 import VideoPlayer from '@components/VideoPlayer';
 import StreamSettings from '@pages/StudioPage/StreamSettings';
 import WebStreamControls from '@pages/StudioPage/WebStreamControls';
@@ -13,7 +13,7 @@ type StreamType = 'OBS' | 'WebOBS';
 
 export default function StudioPage() {
   const { channelId } = useParams<{ channelId: string }>();
-  const { refreshToken } = useAuth();
+  // const { refreshToken } = useAuth();
   const [streamType, setStreamType] = useState<StreamType>('OBS');
   const [showStreamKey, setShowStreamKey] = useState(false);
   const [webcamEnabled, setWebcamEnabled] = useState(false);
@@ -25,9 +25,9 @@ export default function StudioPage() {
 
   const { chatState, toggleChat } = useLayoutStore();
 
-  useEffect(() => {
-    refreshToken();
-  }, [refreshToken]);
+  // useEffect(() => {
+  //   refreshToken();
+  // }, [refreshToken]);
 
   if (!channelId) {
     return (
