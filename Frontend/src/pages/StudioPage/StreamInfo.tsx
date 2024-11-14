@@ -32,24 +32,25 @@ export default function StreamInfo({ channelId }: StreamInfoProps) {
   const updateLive = useUpdateLive();
 
   useEffect(() => {
-    if (!user) return;
-
-    const defaultTitle = `${user.nickname}의 라이브 방송`;
-    const defaultDescription = `${user.nickname}의 라이브 방송입니다`;
-
-    if (!isLoading && liveDetail) {
-      setTitle(liveDetail.livesName || defaultTitle);
-      setDescription(liveDetail.livesDescription || defaultDescription);
-
-      if (liveDetail.categoriesId) {
-        const category = CATEGORIES.find(cat => cat.id === liveDetail.categoriesId);
-        setSelectedCategory(category || null);
+    if (!isLoading) {
+      if (liveDetail?.livesName) {
+        setTitle(liveDetail.livesName);
+      } else {
+        setTitle(`${user?.nickname}의 라이브 방송`);
       }
-    } else {
-      setTitle(defaultTitle);
-      setDescription(defaultDescription);
+      if (liveDetail?.livesDescription) {
+        setDescription(liveDetail.livesDescription);
+      } else {
+        setDescription(`${user?.nickname}의 라이브 방송입니다`);
+      }
+      if (liveDetail?.categoriesId) {
+        const category = CATEGORIES.find(cat => cat.id === liveDetail.categoriesId);
+        if (category) {
+          setSelectedCategory(category);
+        }
+      }
     }
-  }, [liveDetail, isLoading, user]);
+  }, [liveDetail, isLoading, user?.nickname]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
