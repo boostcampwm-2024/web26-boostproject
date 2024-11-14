@@ -52,7 +52,7 @@ export default function NavbarMini(): JSX.Element {
 
           <div className="my-2 h-px bg-lico-gray-3" />
 
-          <NavLink to={`/studio/${user?.channelID}`} target="_blank" rel="noopener noreferrer" className={linkClass}>
+          <NavLink to={`/studio/${user?.channelId}`} target="_blank" rel="noopener noreferrer" className={linkClass}>
             <div className="flex items-center">
               <LuVideo className="h-5 w-5" />
             </div>
