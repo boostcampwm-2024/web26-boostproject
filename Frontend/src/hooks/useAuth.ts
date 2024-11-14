@@ -65,23 +65,23 @@ export function useAuth() {
     } catch {}
   };
 
-  const refreshToken = async () => {
-    try {
-      const data = await authApi.refreshToken();
-      setAuth({
-        accessToken: data.accessToken,
-        user: data.user,
-      });
-    } catch {
-      clearAuth();
-      navigate('/login');
-    }
-  };
+  // const refreshToken = async () => {
+  //   try {
+  //     const data = await authApi.refreshToken();
+  //     setAuth({
+  //       accessToken: data.accessToken,
+  //       user: data.user,
+  //     });
+  //   } catch {
+  //     clearAuth();
+  //     navigate('/login');
+  //   }
+  // };
 
   return {
     login,
     handleCallback,
     logout,
-    refreshToken,
+    // refreshToken,
   };
 }
