@@ -36,12 +36,12 @@ export default function StreamInfo({ channelId }: StreamInfoProps) {
       if (liveDetail?.livesName) {
         setTitle(liveDetail.livesName);
       } else {
-        setTitle(`${user?.name}의 라이브 방송`);
+        setTitle(`${user?.nickname}의 라이브 방송`);
       }
       if (liveDetail?.livesDescription) {
         setDescription(liveDetail.livesDescription);
       } else {
-        setDescription(`${user?.name}의 라이브 방송입니다`);
+        setDescription(`${user?.nickname}의 라이브 방송입니다`);
       }
       if (liveDetail?.categoriesId) {
         const category = CATEGORIES.find(cat => cat.id === liveDetail.categoriesId);
@@ -50,7 +50,7 @@ export default function StreamInfo({ channelId }: StreamInfoProps) {
         }
       }
     }
-  }, [liveDetail, isLoading, user?.name]);
+  }, [liveDetail, isLoading, user?.nickname]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
