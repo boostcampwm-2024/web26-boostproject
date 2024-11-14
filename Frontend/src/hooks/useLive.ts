@@ -2,6 +2,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { liveApi } from '@apis/live';
 import type { Live, LiveDetail, UpdateLiveRequest, SortType } from '@/types/live';
 
+
 export const liveKeys = {
   all: ['lives'] as const,
   sorted: (sort: SortType) => [...liveKeys.all, { sort }] as const,
@@ -10,14 +11,14 @@ export const liveKeys = {
 };
 
 export const useLives = (sort: SortType) => {
-  return useQuery<Live[]>({
+  return useQuery<Live[], AxiosError>({
     queryKey: liveKeys.sorted(sort),
     queryFn: () => liveApi.getLives(sort),
   });
 };
 
 export const useLiveDetail = (channelId: string) => {
-  return useQuery<LiveDetail>({
+  return useQuery<LiveDetail, AxiosError>({
     queryKey: liveKeys.detail(channelId),
     queryFn: () => liveApi.getLiveByChannelId(channelId),
     enabled: !!channelId,

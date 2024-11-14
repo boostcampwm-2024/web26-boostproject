@@ -44,7 +44,7 @@ export default function StudioPage() {
       <main className="min-w-96 flex-1 overflow-y-auto p-6 scrollbar-hide" role="main">
         <h1 className="mb-4 font-bold text-2xl text-lico-gray-1">스튜디오</h1>
         <div className="mt-4 h-3/5">
-          <VideoPlayer streamUrl={`/stream/${channelId}`} />
+          <VideoPlayer streamUrl={`/stream/${channelId}`} onAir />
         </div>
 
         <div className="mt-4">

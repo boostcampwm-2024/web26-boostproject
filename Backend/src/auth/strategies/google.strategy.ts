@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
+import { Strategy } from 'passport-google-oauth20';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
+
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(
@@ -12,27 +13,27 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: configService.get<string>('GOOGLE_REDIRECT_URI'), // http://localhost:3000/auth/google/callback
+      callbackURL: configService.get<string>('GOOGLE_REDIRECT_URI'),
       scope: ['email', 'profile', 'openid'],
     });
   }
 
   async validate(
-    request: any,
     accessToken: string,
     refreshToken: string,
     profile: any,
-    done: VerifyCallback,
+    done: Function
   ): Promise<any> {
     try {
-      console.log('Access Token:', accessToken); // 토큰 확인용 로그
+      const { id: oauthUid, displayName, emails, photos } = profile;
 
+      // Google 사용자 데이터 구성
       const userData = {
-        oauthUid: profile.id,
-        provider: 'google' as const,
-        nickname: profile.displayName || profile.emails[0].value.split('@')[0],
-        profileImage: profile.photos?.[0]?.value || null,
-        email: profile.emails[0].value,
+        oauthUid,
+        provider: 'google' as 'google',
+        nickname: displayName || emails?.[0]?.value?.split('@')[0] || `User${oauthUid.substring(0, 8)}`,
+        profileImage: photos?.[0]?.value || null,
+        email: emails?.[0]?.value || null,
       };
 
       done(null, userData);

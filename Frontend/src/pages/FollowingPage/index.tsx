@@ -1,8 +1,8 @@
 import useFollowStore from '@store/useFollowStore.ts';
-import mockChannels from '@/mocks/mockChannels';
-import mockUsers from '@/mocks/mockUsers';
-import ChannelGrid from '@/components/channel/ChannelGrid';
-import type { ChannelCardProps } from '@/components/channel/ChannelCard';
+import mockChannels from '@mocks/mockChannels';
+import mockUsers from '@mocks/mockUsers';
+import ChannelGrid from '@components/channel/ChannelGrid';
+import type { ChannelCardProps } from '@components/channel/ChannelCard';
 
 export default function FollowingPage() {
   const { followingChannels } = useFollowStore();
@@ -23,7 +23,6 @@ export default function FollowingPage() {
         categoryId: channel.categoryId,
         profileImgUrl: channel.profileImgUrl,
         thumbnailUrl: channel.thumbnailUrl,
-        createdAt: channel.createdAt,
       };
 
       return channelData;

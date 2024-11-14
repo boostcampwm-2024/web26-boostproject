@@ -1,10 +1,19 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Res,
+  UseGuards,
+  Post,
+  HttpCode,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { UnauthorizedException } from '@nestjs/common';
-import { JwtAuthGuard } from './guards/jwt-auth.guard'; 
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+ 
 
 @Controller('auth')
 export class AuthController {
@@ -98,5 +107,36 @@ export class AuthController {
     }
   }
 
+  @Post('refresh')
+  @HttpCode(200)
+  async refresh(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+
+    try {
+      const { accessToken, refreshToken: newRefreshToken, user } =
+        await this.authService.refreshTokens(refreshToken);
+
+      // 새로운 Refresh 토큰을 쿠키에 설정
+      res.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+        path: '/auth',
+      });
+
+      // 응답
+      res.status(200).json({
+        accessToken,
+        user,
+      });
+    } catch (error) {
+      console.error('Refresh Token Error:', error);
+      throw new UnauthorizedException('Could not refresh tokens');
+    }
+  }
 
 }

@@ -6,10 +6,14 @@ import { LivesDto } from './dto/lives.dto';
 import { LiveDto } from './dto/live.dto';
 import { UUID } from 'crypto';
 import { ErrorMessage } from './error/error.message.enum';
+import { ChatsService } from './../chats/chats.service';
 
 @Injectable()
 export class LivesService {
-  constructor(@InjectRepository(LiveEntity) private livesRepository: Repository<LiveEntity>) {}
+  constructor(
+    @InjectRepository(LiveEntity) private livesRepository: Repository<LiveEntity>,
+    private chatsService: ChatsService,
+  ) {}
 
   async readLives(where: FindOptionsWhere<LiveEntity> = {}): Promise<LivesDto[]> {
     // TODO 데이터 베이스 뷰 추가
@@ -47,10 +51,12 @@ export class LivesService {
       throw new ConflictException(ErrorMessage.LIVE_ALREADY_STARTED);
     }
 
+    this.chatsService.clearChat(live.channelId as UUID);
     await this.livesRepository.update({ streamingKey }, { startedAt: new Date(), onAir: true });
   }
 
-  async endLive(streamingKey: UUID) {
-    this.livesRepository.update({ streamingKey }, { onAir: false });
+  async endLive(channelId: UUID) {
+    this.livesRepository.update({ channelId }, { onAir: false });
+    this.chatsService.clearChat(channelId);
   }
 }

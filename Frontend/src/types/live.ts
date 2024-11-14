@@ -15,7 +15,7 @@ export interface LiveDetail {
   usersNickname: string;
   usersProfileImage: string;
   startedAt: string;
-  streamingKey: string;
+  onAir: boolean;
 }
 
 export interface UpdateLiveRequest {

@@ -1,6 +1,6 @@
 import Badge from '@components/common/Badges/Badge';
-import ChannelThumbnailPlaceholder from './ChannelThumbnailPlaceholder';
 import { formatNumber } from '@utils/format';
+import ChannelThumbnailPlaceholder from './ChannelThumbnailPlaceholder';
 
 interface ChannelThumbnailProps {
   title: string;
