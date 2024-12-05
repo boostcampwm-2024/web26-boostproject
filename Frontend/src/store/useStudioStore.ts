@@ -42,6 +42,7 @@ interface StudioState {
   setMediaSettings: (settings: MediaSettings | null) => void;
   activeTool: 'text' | 'draw' | 'erase' | null;
   setActiveTool: (tool: 'text' | 'draw' | 'erase' | null) => void;
+  cleanup: () => void;
 }
 
 const initialDrawingState: DrawingState = {
@@ -124,4 +125,34 @@ export const useStudioStore = create<StudioState>(set => ({
   setMediaSettings: settings => set({ mediaSettings: settings }),
   activeTool: null,
   setActiveTool: tool => set({ activeTool: tool }),
+  cleanup: () =>
+    set(state => {
+      if (state.screenStream) {
+        state.screenStream.getTracks().forEach(track => track.stop());
+      }
+
+      if (state.mediaStream) {
+        state.mediaStream.getTracks().forEach(track => track.stop());
+      }
+
+      return {
+        screenStream: null,
+        mediaStream: null,
+        isStreaming: false,
+        paths: [],
+        currentPath: null,
+        texts: [],
+        images: [],
+        drawingState: initialDrawingState,
+        activeTool: null,
+        mediaSettings: null,
+        deleteModal: {
+          show: false,
+          x: 0,
+          y: 0,
+          type: 'text',
+          targetId: '',
+        },
+      };
+    }),
 }));
